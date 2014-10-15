@@ -22,21 +22,21 @@ function cmd(bosco, args) {
 	// Connect or launch PM2
 	pm2.connect(function(err) {
 
-		var stopRunningServices = function(running) {			
-			async.map(repos, function(repo, next) {				
+		var stopRunningServices = function(running) {
+			async.map(repos, function(repo, next) {
 				var pkg, basePath, repoPath = bosco.getRepoPath(repo), packageJson = [repoPath,"package.json"].join("/");
 				if(repo.match(repoRegex) && bosco.exists(packageJson)) {
 					pkg = require(packageJson);
 					if(_.contains(running, repo)) {
-						stopService(repo, pkg.scripts.start, repoPath, next);						
+						stopService(repo, pkg.scripts.start, repoPath, next);
 					} else {
 						bosco.warn("Not running: " + repo);
 						next();
-					}					
+					}
 				} else {
 					next();
 				}
-			}, function(err) {				
+			}, function(err) {
 				process.exit(0);
 			});
 
@@ -44,7 +44,7 @@ function cmd(bosco, args) {
 
 		var getRunningServices = function(next) {
 			pm2.list(function(err, list) {
-				next(err, _.pluck(list,'name'));				
+				next(err, _.pluck(list,'name'));
 			});
 		}
 
@@ -52,18 +52,18 @@ function cmd(bosco, args) {
 			bosco.log("Stopping " + repo + " @ " + repoPath + " via " + script.blue);
 			pm2.stop(repo, function(err, proc) {
 				pm2.delete(repo, function(err, proc) {
-				  next(err);	
-				});				
-			});	
+				  next(err);
+				});
+			});
 		}
 
-		bosco.log("Stop each mircoservice " + args);
+		bosco.log("Stop each microservice " + args);
 
 		getRunningServices(function(err, running) {
-			stopRunningServices(running);	
+			stopRunningServices(running);
 		});
 
 	});
 
 }
-	
+

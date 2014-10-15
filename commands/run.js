@@ -99,7 +99,7 @@ function cmd(bosco, args) {
 			pm2.start(start, { name: repo, cwd: repoPath, watch: true, executeCommand: executeCommand }, next);
 		}
 
-		bosco.log("Run each mircoservice " + args);
+		bosco.log("Run each microservice " + args);
 
 		getRunningServices(function(err, running) {
 			startRunnableServices(running);
